@@ -32,3 +32,4 @@
       apt:
         name: nginx
         state: latest
+      become: yes
