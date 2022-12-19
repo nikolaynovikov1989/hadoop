@@ -21,4 +21,4 @@
       register: this
       ignore_errors: true
     - debug: msg="{{ service }} not started"
-      when: "'{{ service }}' not in this.stdout"
+      #when: "'{{ service }}' not in this.stdout"
