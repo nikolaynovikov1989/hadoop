@@ -16,7 +16,6 @@
         - "'ApplicationHistoryServer' not in this.stdout"
         - "'NodeManager' not in this.stdout"
         - "'ResourceManager' not in this.stdout"
-      ignore_errors: true
     - debug: msg="NameNode not started"
       when: "'NameNode' not in this.stdout"
     - debug: msg="ApplicationHistoryServer not started"
