@@ -6,7 +6,7 @@ pipeline {
             sshagent(credentials: ['ansible_user']) {
                     sh 'pwd'
                     sh 'ls -la'
-                    sh 'ansible-playbook -i hosts playbook.yml'
+                    sh 'ansible-playbook -i hosts playbook2.yml'
                 }
             }
         }
