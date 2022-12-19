@@ -1,0 +1,24 @@
+- name: test
+  hosts: all
+
+  vars:
+    service:
+      - NameNode
+      - ApplicationHistoryServer
+      - NodeManager
+      - ResourceManager
+      - datanode
+  tasks:
+    - name: Check url
+      uri:
+        url: http://192.168.0.150:9870
+      register: _result
+      ignore_errors: true
+    - debug: msg="http://192.168.0.150:9870 не доступен по данному порту"
+      when: _result.status != 200
+    - name: Test ps ef
+      shell: "ps -ef"
+      register: this
+      ignore_errors: true
+    - debug: msg="{{ service }} not started"
+      when: "'{{ service }}' not in this.stdout"

@@ -28,3 +28,7 @@
     - debug: msg="datanode not started"
       when: "'datanode' not in this.stdout"
     - debug: msg="Сервисы Hadoop запущены"
+    - name: Install Nginx Web Server on Debian Family
+      apt:
+        name: nginx
+        state: latest
