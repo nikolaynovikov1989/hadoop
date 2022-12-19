@@ -11,12 +11,6 @@
     - name: Test ps ef
       shell: "ps -ef"
       register: this
-    - debug: msg="Проверяем продолжать выполенние или нет"
-      failed_when:
-        - "'NameNode' not in this.stdout"
-        - "'ApplicationHistoryServer' not in this.stdout"
-        - "'NodeManager' not in this.stdout"
-        - "'ResourceManager' not in this.stdout"
     - debug: msg="NameNode not started"
       when: "'NameNode' not in this.stdout"
     - debug: msg="ApplicationHistoryServer not started"
@@ -28,6 +22,12 @@
     - debug: msg="datanode not started"
       when: "'datanode' not in this.stdout"
     - debug: msg="Сервисы Hadoop запущены"
+    - debug: msg="Проверяем продолжать выполенние или нет"
+      failed_when:
+        - "'NameNode' not in this.stdout"
+        - "'ApplicationHistoryServer' not in this.stdout"
+        - "'NodeManager' not in this.stdout"
+        - "'ResourceManager' not in this.stdout"
     - name: install nginx
       apt:
         name: nginx
