@@ -1,0 +1,30 @@
+- name: test
+  hosts: all
+  tasks:
+    - name: Check url
+      uri:
+        url: http://192.168.0.150:9870
+      register: _result
+      ignore_errors: true
+    - debug: msg="http://192.168.0.150:9870 не доступен по данному порту"
+      when: _result.status != 200
+    - name: Test ps ef
+      shell: "ps -ef"
+      register: this
+        #     failed_when:
+        #       - "'NameNode' not in this.stdout"
+        #       - "'ApplicationHistoryServer' not in this.stdout"
+        #       - "'NodeManager' not in this.stdout"
+      #       - "'ResourceManager' not in this.stdout"
+      ignore_errors: true
+    - debug: msg="NameNode not started"
+      when: "'NameNode' not in this.stdout"
+    - debug: msg="ApplicationHistoryServer not started"
+      when: "'ApplicationHistoryServer' not in this.stdout"
+    - debug: msg="NodeManager not started"
+      when: "'NodeManager' not in this.stdout"
+    - debug: msg="ResourceManager not started"
+      when: "'ResourceManager' not in this.stdout"
+    - debug: msg="datanode not started"
+      when: "'datanode' not in this.stdout"
+    - debug: msg="Сервисы Hadoop запущены"

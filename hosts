@@ -1,0 +1,2 @@
+[hadoop]
+server1 ansible_host=192.168.0.150 ansible_user=nikolay ansible_password=12345
