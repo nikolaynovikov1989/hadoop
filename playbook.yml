@@ -6,8 +6,6 @@
         url: http://192.168.0.150:9870
       register: _result
       ignore_errors: true
-    - debug: msg="http://192.168.0.150:9870 не доступен по данному порту"
-      when: _result.status != 200
     - name: Test ps ef
       shell: "ps -ef"
       register: this
@@ -21,13 +19,15 @@
       when: "'ResourceManager' not in this.stdout"
     - debug: msg="datanode not started"
       when: "'datanode' not in this.stdout"
-    - debug: msg="Сервисы Hadoop запущены"
+    - debug: msg="http://192.168.0.150:9870 не доступен по данному порту"
+      when: _result.status != 200
     - debug: msg="Проверяем продолжать выполенние или нет"
       failed_when:
         - "'NameNode' not in this.stdout"
         - "'ApplicationHistoryServer' not in this.stdout"
         - "'NodeManager' not in this.stdout"
         - "'ResourceManager' not in this.stdout"
+        - "_result.status != 200"
     - name: install nginx
       apt:
         name: nginx
@@ -39,3 +39,4 @@
         - "'ApplicationHistoryServer' in this.stdout"
         - "'NodeManager' in this.stdout"
         - "'ResourceManager' in this.stdout"
+        - "_result.status != 200"
