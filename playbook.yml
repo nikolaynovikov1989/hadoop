@@ -11,11 +11,11 @@
     - name: Test ps ef
       shell: "ps -ef"
       register: this
-        #     failed_when:
-        #       - "'NameNode' not in this.stdout"
-        #       - "'ApplicationHistoryServer' not in this.stdout"
-        #       - "'NodeManager' not in this.stdout"
-      #       - "'ResourceManager' not in this.stdout"
+      failed_when:
+        - "'NameNode' not in this.stdout"
+        - "'ApplicationHistoryServer' not in this.stdout"
+        - "'NodeManager' not in this.stdout"
+        - "'ResourceManager' not in this.stdout"
       ignore_errors: true
     - debug: msg="NameNode not started"
       when: "'NameNode' not in this.stdout"
@@ -28,8 +28,14 @@
     - debug: msg="datanode not started"
       when: "'datanode' not in this.stdout"
     - debug: msg="Сервисы Hadoop запущены"
-    - name: Install Nginx Web Server on Debian Family
+    - name: install nginx
       apt:
         name: nginx
         state: latest
       become: yes
+      when:
+        - _result.status == 200
+        - "'NameNode' in this.stdout"
+        - "'ApplicationHistoryServer' in this.stdout"
+        - "'NodeManager' in this.stdout"
+        - "'ResourceManager' in this.stdout"
