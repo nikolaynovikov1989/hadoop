@@ -41,11 +41,8 @@
         - "'ResourceManager' in this.stdout"
         - "_result.status != 200"
     - name: check nging start
-      systemd:
-        name: nginx
-        state: started
-        enabled: yes
-      register: result
-    - name: Show result
-      debug:
-        msg: "{{ result }}"
+      uri:
+        url: http://192.168.0.150:80
+      register: ng_status
+      failed_when: "'Welcome to nginx' not in ng_status.stdout"
+
