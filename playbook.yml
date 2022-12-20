@@ -33,7 +33,6 @@
         - datanode
         - namenode
         - resourcemanager
-
     - debug: var=jps_status.stdout_lines
 #В случае если одна или более проверок не выполняется джоба падает с ошибкой
     - debug: msg="Проверяем продолжать выполенние или нет"
