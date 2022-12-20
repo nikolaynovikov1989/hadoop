@@ -26,7 +26,7 @@
     - name: check jps
       shell: "docker exec b30e2139ee40 jps"
       register: jps_status
-      debug: msg="jps_status.stdout"
+    - debug: msg="jps_status.stdout"
 #В случае если одна или более проверок не выполняется джоба падает с ошибкой
     - debug: msg="Проверяем продолжать выполенние или нет"
       failed_when:
