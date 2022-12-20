@@ -1,6 +1,14 @@
 - name: test
   hosts: all
   become: yes
+
+  vars:
+    container_name:
+      - nodemanager
+      - historyserver
+      - datanode
+      - namenode
+      - resourcemanager
   tasks:
 #Выполняем проверку дсотупности консоли по порту
     - name: Check url
@@ -25,7 +33,7 @@
     - debug: msg="http://192.168.0.150:9870 не доступен по данному порту"
       when: _result.status != 200
     - name: check jps
-      shell: "docker exec b30e2139ee40 jps"
+      shell: "docker exec {{ container_name }} jps"
       register: jps_status
     - debug: var=jps_status.stdout_lines
 #В случае если одна или более проверок не выполняется джоба падает с ошибкой
