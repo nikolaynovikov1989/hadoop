@@ -32,6 +32,7 @@
       when: "'datanode' not in this.stdout"
     - debug: msg="http://192.168.0.150:9870 не доступен по данному порту"
       when: _result.status != 200
+#Заходим в каждый контейнер и выполняем команду jps для посика запущенного процесса, делаем grep по имени и проверяем код ответа.
     - name: check jps
       shell: "docker exec {{ item  }} jps|grep -i {{ item }}"
       register: "jps"
