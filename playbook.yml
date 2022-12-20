@@ -4,11 +4,11 @@
 
   vars:
     services:
-      - nodemanager
-      - historyserver
-      - datanode
-      - namenode
-      - resourcemanager
+      - NodeManager
+      - HistoryServer
+      - DataNode
+      - NameNode
+      - ResourceManager
   tasks:
 #Выполняем проверку дсотупности консоли по порту
     - name: Check url
@@ -33,7 +33,7 @@
     - debug: msg="http://192.168.0.150:9870 не доступен по данному порту"
       when: _result.status != 200
     - name: check jps
-      shell: "docker exec {{ item  }} jps|grep {{ item }}"
+      shell: "docker exec {{ item  }} jps|grep -i {{ item }}"
       register: "jps"
       with_items: "{{ services }}"
     - name: Fail if return code is not 0
