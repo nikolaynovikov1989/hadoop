@@ -1,6 +1,14 @@
 - name: test
   hosts: all
   become: yes
+
+  vars:
+    services:
+      - nodemanager
+      - historyserver
+      - datanode
+      - namenode
+      - resourcemanager
   tasks:
 #Выполняем проверку дсотупности консоли по порту
     - name: Check url
@@ -27,12 +35,8 @@
     - name: check jps
       shell: "docker exec {{ item  }} jps"
       register: "jps_status"
-      loop:
-        - nodemanager
-        - historyserver
-        - datanode
-        - namenode
-        - resourcemanager
+      loop: {{ services }}
+
     - debug: var=jps_status
 #В случае если одна или более проверок не выполняется джоба падает с ошибкой
     - debug: msg="Проверяем продолжать выполенние или нет"
