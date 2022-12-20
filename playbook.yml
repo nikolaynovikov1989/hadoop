@@ -34,9 +34,18 @@
         state: latest
       become: yes
       when:
-        - _result.status == 200
+        - "_result.status == 200"
         - "'NameNode' in this.stdout"
         - "'ApplicationHistoryServer' in this.stdout"
         - "'NodeManager' in this.stdout"
         - "'ResourceManager' in this.stdout"
         - "_result.status != 200"
+    - name: check nging start
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+      register: result
+    - name: Show result
+      debug:
+        msg: "{{ result }}"
