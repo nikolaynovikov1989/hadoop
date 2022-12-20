@@ -32,11 +32,11 @@
       when: "'datanode' not in this.stdout"
     - debug: msg="http://192.168.0.150:9870 не доступен по данному порту"
       when: _result.status != 200
-#    - name: check jps
-#      shell: "docker exec {{ item  }} jps"
-#      register: "jps_status"
-#      with_items: "{{ services }}"
-#      failed_when: "NameNode" not in jps_status.results
+    - name: check jps
+      shell: "docker exec {{ item  }} jps"
+      register: "jps_status"
+      with_items: "{{ services }}"
+      failed_when: "NameNode" not in jps_status
 #В случае если одна или более проверок не выполняется джоба падает с ошибкой
     - debug: msg="Проверяем продолжать выполенние или нет"
       failed_when:
