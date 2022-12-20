@@ -36,7 +36,11 @@
       shell: "docker exec {{ item  }} jps"
       register: "jps_status"
       with_items: "{{ services }}"
-      failed_when: "NameNode" not in jps_status.stdout
+    - name: Fail if return code is not 0
+      ansible.builtin.fail:
+        msg: "The command ({{ item.cmd }}) did not have a 0 return code"
+      when: item.rc != 0
+      loop: "{{ echo.results }}"
 #В случае если одна или более проверок не выполняется джоба падает с ошибкой
     - debug: msg="Проверяем продолжать выполенние или нет"
       failed_when:
