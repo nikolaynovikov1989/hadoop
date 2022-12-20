@@ -1,5 +1,13 @@
 - name: test
   hosts: all
+
+  vars:
+    services:
+      - NameNode
+      - ApplicationHistoryServer
+      - NodeManage
+      - ResourceManager
+      - datanode
   tasks:
     - name: Check url
       uri:
@@ -9,34 +17,11 @@
     - name: Test ps ef
       shell: "ps -ef"
       register: this
-    - debug: msg="NameNode not started"
-      when: "'NameNode' not in this.stdout"
-    - debug: msg="ApplicationHistoryServer not started"
-      when: "'ApplicationHistoryServer' not in this.stdout"
-    - debug: msg="NodeManager not started"
-      when: "'NodeManager' not in this.stdout"
-    - debug: msg="ResourceManager not started"
-      when: "'ResourceManager' not in this.stdout"
-    - debug: msg="datanode not started"
-      when: "'datanode' not in this.stdout"
+    - debug: msg="{{ services }} not started"
+      when: "'{{ services }}' not in this.stdout"
     - debug: msg="http://192.168.0.150:9870 не доступен по данному порту"
       when: _result.status != 200
     - debug: msg="Проверяем продолжать выполенние или нет"
       failed_when:
-        - "'NameNode' not in this.stdout"
-        - "'ApplicationHistoryServer' not in this.stdout"
-        - "'NodeManager' not in this.stdout"
-        - "'ResourceManager' not in this.stdout"
-        - "_result.status != 200"
-    - name: install nginx
-      apt:
-        name: nginx
-        state: latest
-      become: yes
-      when:
-        - _result.status == 200
-        - "'NameNode' in this.stdout"
-        - "'ApplicationHistoryServer' in this.stdout"
-        - "'NodeManager' in this.stdout"
-        - "'ResourceManager' in this.stdout"
+        - "'{{ services }}' not in this.stdout"
         - "_result.status != 200"
