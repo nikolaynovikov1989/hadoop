@@ -22,7 +22,7 @@
       register: this
     - debug: msg="{{ item }} not started"
       with_items: "{{ services }}"
-      when: "'{{ item }}' not in this.stdout"
+      when: "{{ item }} not in this.stdout"
     - debug: msg="http://192.168.0.150:9870 не доступен по данному порту"
       when: _result.status != 200
     - name: check jps
