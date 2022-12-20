@@ -34,7 +34,7 @@
       when: _result.status != 200
     - name: check jps
       shell: "docker exec {{ item  }} jps"
-      register: "jps_status"
+      register: "jps_status.stdout"
       with_items: "{{ services }}"
 
     - debug: var=jps_status
