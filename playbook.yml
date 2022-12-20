@@ -1,5 +1,6 @@
 - name: test
   hosts: all
+  become: yes
   tasks:
 #Выполняем проверку дсотупности консоли по порту
     - name: Check url
@@ -40,7 +41,6 @@
       apt:
         name: nginx
         state: latest
-      become: yes
       when:
         - "_result.status == 200"
         - "'NameNode' in this.stdout"
