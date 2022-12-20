@@ -1,25 +1,59 @@
 - name: test
   hosts: all
+  become: yes
 
   vars:
     services:
-      - NameNode
-      - ApplicationHistoryServer
-      - NodeManage
-      - ResourceManager
+      - nodemanager
+      - historyserver
       - datanode
+      - namenode
+      - resourcemanager
   tasks:
+    #Выполняем проверку дсотупности консоли по порту
     - name: Check url
       uri:
         url: http://192.168.0.150:9870
       register: _result
       ignore_errors: true
+    #Выполянем поиск процессов по именам сервисов , вслучае если какой либо сервис не активен выдаем сообщение с именем сервиса
     - name: Test ps ef
       shell: "ps -ef"
       register: this
-    - debug: msg="{{ services }} not started"
-      when: "{{ services }} not in this.stdout"
+    - debug: msg="{{ item }} not started"
+      with_items: "{{ services }}"
+      when: "'{{ item }}' not in this.stdout"
     - debug: msg="http://192.168.0.150:9870 не доступен по данному порту"
       when: _result.status != 200
+    - name: check jps
+      shell: "docker exec {{ item  }} jps"
+      register: "jps_status"
+      with_items: "{{ services }}"
+    - debug: "var=jps_status.results"
+    #В случае если одна или более проверок не выполняется джоба падает с ошибкой
     - debug: msg="Проверяем продолжать выполенние или нет"
-      failed_when: "{{ services }} not in this.stdout or _result.status != 200"
+      failed_when:
+        - "'NameNode' not in this.stdout"
+        - "'ApplicationHistoryServer' not in this.stdout"
+        - "'NodeManager' not in this.stdout"
+        - "'ResourceManager' not in this.stdout"
+        - "_result.status != 200"
+    #Выполняем устанвоку nginx только есди выполняюстя все условия
+    - name: install nginx
+      apt:
+        name: nginx
+        state: latest
+      when:
+        - "_result.status == 200"
+        - "'NameNode' in this.stdout"
+        - "'ApplicationHistoryServer' in this.stdout"
+        - "'NodeManager' in this.stdout"
+        - "'ResourceManager' in this.stdout"
+        - "_result.status != 200"
+    #Заходим на стартовую страницу и првоеряем есть ли на ней стартовое приветсвтие "Welcome to nginx" если нет падает с ошибкой
+    - name: check nging start
+      uri:
+        url: http://192.168.0.150:80
+        return_content: yes
+      register: ng_status
+      failed_when: "'Welcome to nginx' not in ng_status.content"

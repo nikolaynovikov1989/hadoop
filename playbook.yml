@@ -36,8 +36,7 @@
       shell: "docker exec {{ item  }} jps"
       register: "jps_status"
       with_items: "{{ services }}"
-
-    - debug: "var=jps_status.results.stdout"
+    - debug: "var=jps_status.results"
 #В случае если одна или более проверок не выполняется джоба падает с ошибкой
     - debug: msg="Проверяем продолжать выполенние или нет"
       failed_when:
