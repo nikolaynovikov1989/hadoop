@@ -4,11 +4,11 @@
 
   vars:
     services:
-      - NodeManager
-      - HistoryServer
-      - DataNode
-      - NameNode
-      - ResourceManager
+      - nodemanager
+      - historyserver
+      - datanode
+      - namenode
+      - resourcemanager
   tasks:
 #Выполняем проверку дсотупности консоли по порту
     - name: Check url
