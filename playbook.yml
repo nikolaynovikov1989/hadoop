@@ -44,5 +44,4 @@
       uri:
         url: http://192.168.0.150:80
       register: ng_status
-      failed_when: "'Welcome to nginx' not in ng_status.stdout"
-
+      failed_when: "'Welcome to nginx' not in ng_status.content"
